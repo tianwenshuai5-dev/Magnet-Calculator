@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnet Calculator - Professional Magnetic Steel Parameter Calculation Tool</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f1f5f9',
+                        'neutral-dark': '#334155',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-calculator text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-gray-800">Magnet Calculator</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="text-gray-600 hover:text-primary transition-all-300">Home</a></li>
+                    <li><a href="#calculator" class="text-gray-600 hover:text-primary transition-all-300">Calculator</a>
+                    </li>
+                    <li><a href="#about" class="text-gray-600 hover:text-primary transition-all-300">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 介绍部分 -->
+        <section class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Magnet Calculator</h2>
+        </section>
+
+        <!-- 计算器部分 -->
+        <section id="calculator" class="mb-16">
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+                <!-- 步骤指示器 -->
+                <div class="bg-white p-4 border-b" role="navigation" aria-label="计算步骤">
+                    <ol class="flex justify-between w-3/4 mx-auto" role="list">
+                        <li class="step-indicator active" aria-current="step">
+                            <div class="step-circle bg-primary text-white" aria-hidden="true">1</div>
+                            <p class="step-label">Select Shape</p>
+                            <span class="sr-only">Step 1: Select Shape, Current Step</span>
+                        </li>
+                        <li class="step-indicator">
+                            <div class="step-circle bg-gray-200 text-gray-600" aria-hidden="true">2</div>
+                            <p class="step-label">Input Parameters</p>
+                            <span class="sr-only">Step 2: Input Parameters</span>
+                        </li>
+                        <li class="step-indicator">
+                            <div class="step-circle bg-gray-200 text-gray-600" aria-hidden="true">3</div>
+                            <p class="step-label">View Results</p>
+                            <span class="sr-only">Step 3: View Results</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- 步骤内容区 -->
+                <div class="bg-gray-50 p-6">
+                    <!-- 步骤 1: 选择形状 -->
+                    <div id="step-1" class="step-content active">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Select Shape</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- 圆形磁钢 -->
+                            <div class="shape-card" data-shape="circle">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1944fb1109c841fb8b67a3ae1c60e418~tplv-a9rns2rl98-image.image?rcl=20251101001504283649BBD9AF80531072&amp;rk3s=8e244e95&amp;rrcfp=f06b921b&amp;x-expires=1764519347&amp;x-signature=2Lam4k9KqJoq9fUxPUhiqch4N1I%3D"
+                                    alt="圆形磁钢" class="w-full h-48 object-contain mb-4">
+                                <h4 class="font-medium text-gray-800 text-center">Circular Magnet</h4>
+                            </div>
+
+                            <!-- 方形磁钢 -->
+                            <div class="shape-card" data-shape="square">
+                                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/0f53bad9bb654fc48f83d20275dfcf0d~tplv-a9rns2rl98-image.image?rcl=20251101001504283649BBD9AF80531072&amp;rk3s=8e244e95&amp;rrcfp=f06b921b&amp;x-expires=1764519330&amp;x-signature=l5PDQdzYobbCYS29XgxaFSKcrdU%3D"
+                                    alt="方形磁钢" class="w-full h-48 object-contain mb-4">
+                                <h4 class="font-medium text-gray-800 text-center">Square Magnet</h4>
+                            </div>
+
+                            <!-- 环形磁钢 -->
+                            <div class="shape-card" data-shape="ring">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/494ae6af82044fd883610f2777ee4f4f~tplv-a9rns2rl98-image.image?rcl=20251101001504283649BBD9AF80531072&amp;rk3s=8e244e95&amp;rrcfp=f06b921b&amp;x-expires=1764519324&amp;x-signature=5cpk0RMoG8JWbz7stpbpNtYoHQE%3D"
+                                    alt="环形磁钢" class="w-full h-48 object-contain mb-4">
+                                <h4 class="font-medium text-gray-800 text-center">Ring Magnet</h4>
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <button id="next-to-step-2" class="btn-primary opacity-50 cursor-not-allowed" disabled="">
+                                Next Step <i class="fa fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 步骤 2: 输入参数 -->
+                    <div id="step-2" class="step-content hidden">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Input Parameters</h3>
+
+                        <!-- 圆形磁钢参数 -->
+                        <div id="circle-params" class="shape-params hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Diameter (mm)</label>
+                                    <input type="number" id="circle-diameter" class="input-field" placeholder="e.g. 20"
+                                        min="0">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Thickness (mm)</label>
+                                    <input type="number" id="circle-thickness" class="input-field" placeholder="e.g. 5"
+                                        min="0">
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="font-medium text-gray-800 mb-3">Processing Parameters</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Length Direction Output
+                                            Count</label>
+                                        <input type="number" id="circle-diameter-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Width Direction Output
+                                            Count</label>
+                                        <input type="number" id="circle-thickness-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Height Direction Output
+                                            Count</label>
+                                        <input type="number" id="circle-height-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter
+                                            @length(mm)</label>
+                                        <input type="number" id="circle-diameter-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @width
+                                            (mm)</label>
+                                        <input type="number" id="circle-thickness-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @height
+                                            (mm)</label>
+                                        <input type="number" id="circle-height-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @length
+                                            (mm)</label>
+                                        <input type="number" id="circle-diameter-machining-allowance"
+                                            class="input-field" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @width
+                                            (mm)</label>
+                                        <input type="number" id="circle-thickness-machining-allowance"
+                                            class="input-field" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @height
+                                            (mm)</label>
+                                        <input type="number" id="circle-height-machining-allowance" class="input-field"
+                                            min="0">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 方形磁钢参数 -->
+                        <div id="square-params" class="shape-params hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Length (mm)</label>
+                                    <input type="number" id="square-length" class="input-field" placeholder="例如: 30"
+                                        min="0">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Width (mm)</label>
+                                    <input type="number" id="square-width" class="input-field" placeholder="例如: 20"
+                                        min="0">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Thickness (mm)</label>
+                                    <input type="number" id="square-thickness" class="input-field" placeholder="例如: 5"
+                                        min="0">
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="font-medium text-gray-800 mb-3">Processing Parameters</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Length direction output
+                                            count</label>
+                                        <input type="number" id="length-output-count" class="input-field" min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Width direction output
+                                            count</label>
+                                        <input type="number" id="width-output-count" class="input-field" min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Thickness direction output
+                                            count</label>
+                                        <input type="number" id="thickness-output-count" class="input-field" min="1">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter
+                                            @length(mm)</label>
+                                        <input type="number" id="length-wire-diameter" class="input-field" value="0.175"
+                                            min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @width
+                                            (mm)</label>
+                                        <input type="number" id="width-wire-diameter" class="input-field" value="0.175"
+                                            min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @thickness
+                                            (mm)</label>
+                                        <input type="number" id="thickness-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @length
+                                            (mm)</label>
+                                        <input type="number" id="length-machining-allowance" class="input-field"
+                                            min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @width
+                                            (mm)</label>
+                                        <input type="number" id="width-machining-allowance" class="input-field" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @thickness
+                                            (mm)</label>
+                                        <input type="number" id="thickness-machining-allowance" class="input-field"
+                                            min="0">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 环形磁钢参数 -->
+                        <div id="ring-params" class="shape-params hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Outer diameter (mm)</label>
+                                    <input type="number" id="ring-outer-diameter" class="input-field"
+                                        placeholder="例如: 30" min="0">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Inner diameter (mm)</label>
+                                    <input type="number" id="ring-inner-diameter" class="input-field"
+                                        placeholder="例如: 15" min="0">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Thickness (mm)</label>
+                                    <input type="number" id="ring-thickness" class="input-field" placeholder="例如: 5"
+                                        min="0">
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="font-medium text-gray-800 mb-3">Processing Parameters</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Length direction output
+                                            count</label>
+                                        <input type="number" id="ring-outer-diameter-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Width direction output
+                                            count</label>
+                                        <input type="number" id="ring-inner-diameter-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Thickness direction output
+                                            count</label>
+                                        <input type="number" id="ring-thickness-output-count" class="input-field"
+                                            min="1">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter
+                                            @length(mm)</label>
+                                        <input type="number" id="ring-outer-diameter-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @width
+                                            (mm)</label>
+                                        <input type="number" id="ring-inner-diameter-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Wire diameter @thickness
+                                            (mm)</label>
+                                        <input type="number" id="ring-thickness-wire-diameter" class="input-field"
+                                            value="0.175" min="0" step="0.001">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @length
+                                            (mm)</label>
+                                        <input type="number" id="ring-outer-diameter-machining-allowance"
+                                            class="input-field" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @width
+                                            (mm)</label>
+                                        <input type="number" id="ring-inner-diameter-machining-allowance"
+                                            class="input-field" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1 text-sm">Machining allowance @thickness
+                                            (mm)</label>
+                                        <input type="number" id="ring-thickness-machining-allowance" class="input-field"
+                                            min="0">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-800 mb-3">Material parameters</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Br (T)</label>
+                                            <input type="number" id="magnetic-flux-density" class="input-field"
+                                                value="1.40" min="0" step="0.01">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Hcj(kA/m)</label>
+                                            <input type="number" id="coercivity" class="input-field" value="1274"
+                                                min="0" step="1">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Material density
+                                                (g/cm³)</label>
+                                            <input type="number" id="material-density" class="input-field" value="7.55"
+                                                min="0" step="0.01">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Magnet orientation
+                                                (Orientation)</label>
+                                            <select id="magnet-orientation" class="input-field">
+                                                <option value="axial">Axial - Thickness direction magnetization</option>
+                                                <option value="radial">Radial - Diameter direction magnetization
+                                                </option>
+                                                <option value="multi-pole">Multi-pole - Complex magnetic field
+                                                    distribution</option>
+                                                <option value="diametral">Diametral - Ring magnet</option>
+                                            </select>
+                                            <div class="mt-1 text-xs text-gray-500" id="orientation-guidance">
+                                                Axial orientation: Most applications, magnetization direction along
+                                                thickness
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Quantity(Pcs)</label>
+                                            <input type="number" id="quantity" class="input-field" value="1" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-medium text-gray-800 mb-3">Plating parameters</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Plating</label>
+                                            <select id="plating-type" class="input-field">
+                                                <option value="none">None</option>
+                                                <option value="phosphating">Phosphating</option>
+                                                <option value="ni">Nickel (Ni)</option>
+                                                <option value="zn">Zinc (Zn)</option>
+                                                <option value="ni-cu-ni" selected="">Nickel-Copper-Nickel (Ni-Cu-Ni)
+                                                </option>
+                                                <option value="cuen">CuEN</option>
+                                                <option value="epoxy">Epoxy</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Plating thickness
+                                                (μm)</label>
+                                            <input type="number" id="plating-thickness" class="input-field" value="0"
+                                                min="0" step="0.1">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Plating price ($/㎡)</label>
+                                            <input type="number" id="plating-price" class="input-field" value="0"
+                                                min="0" step="0.01">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">Acid wash amount
+                                                (μm)</label>
+                                            <input type="number" id="acid-wash-amount" class="input-field" value="20"
+                                                min="0" step="0.01">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 mb-1 text-sm">R corner (mm)</label>
+                                            <input type="number" id="square-corner-radius" class="input-field"
+                                                value="0.10" min="0" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6 flex justify-between">
+                            <button id="back-to-step-1" class="btn-secondary">
+                                <i class="fa fa-arrow-left mr-2"></i> Back to step 1
+                            </button>
+                            <button id="calculate-result-btn" class="btn-primary">
+                                Calculate result <i class="fa fa-calculator ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="step-3" class="step-content hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold text-gray-800">Result</h3>
+                            <div class="flex space-x-2">
+                                <button id="recalculate-result" class="btn-secondary py-1 px-3">
+                                    <i class="fa fa-refresh mr-1"></i> Recalculate
+                                </button>
+                                <button id="print-result" class="btn-secondary py-1 px-3">
+                                    <i class="fa fa-print mr-1"></i> Print
+                                </button>
+                                <button id="export-result" class="btn-secondary py-1 px-3">
+                                    <i class="fa fa-download mr-1"></i> Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="border-b mb-6">
+                            <ul class="flex space-x-4">
+                                <li><button class="tab-button active" data-tab="basic-params">Product
+                                        information</button></li>
+                                <li><button class="tab-button" data-tab="magnetic-properties">Raw material
+                                        information</button></li>
+                            </ul>
+                        </div>
+
+                        <div id="basic-params" class="tab-content active">
+                            <div class="grid grid-cols-5 gap-6">
+                                <div class="col-span-2">
+                                    <div class="bg-white rounded-lg shadow-sm p-4 h-full">
+                                        <h4 class="font-medium text-gray-800 mb-3">Basic parameters</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div class="space-y-2">
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Surface area:
+                                                </div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Volume:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Material
+                                                    density:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Single weight:
+                                                </div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Total weight:
+                                                </div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Br:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Hcj:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Pc value:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Magnet
+                                                    orientation:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Magnet moment
+                                                    (MM):</div>
+                                            </div>
+
+                                            <div class="space-y-2">
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-surface-area">0.00 cm²</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-volume">0.00 cm³</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-density">0.00 g/cm³</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-single-weight">0.00 g</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-total-weight">0.00 g</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-magnetic-flux-density">0.00 T</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-coercivity">0.00 kA/m</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-pc-value">0.00</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-magnet-orientation">-</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-magnetic-moment">0.00 μWb·cm</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-3 flex items-center justify-center">
+                                    <div class="bg-white rounded-lg shadow-sm p-4 h-full flex flex-col w-full">
+                                        <h4 class="font-medium text-gray-800 mb-3">Product 3D view</h4>
+                                        <div class="flex-1 flex items-center justify-center" style="min-height: 315px;">
+                                            <div id="product-3d-view"
+                                                class="relative w-full h-full flex items-center justify-center">
+                                                <canvas id="product-3d-canvas" class="threejs-canvas"></canvas>
+                                                <div id="threejs-loading" class="threejs-loading hidden">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <p class="text-sm text-gray-600" id="product-3d-shape-info">选择形状查看三维视图</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Raw material information -->
+                        <div id="magnetic-properties" class="tab-content hidden">
+                            <div class="grid grid-cols-5 gap-6">
+                                <div class="col-span-2">
+                                    <div class="bg-white rounded-lg shadow-sm p-4 h-full">
+                                        <h4 class="font-medium text-gray-800 mb-3">Raw material information</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div class="space-y-2">
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Raw material
+                                                    length:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Raw material
+                                                    width:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Raw material
+                                                    thickness:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Raw material
+                                                    volume:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Raw material
+                                                    single weight:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Single block
+                                                    raw material output:</div>
+                                                <div class="py-2 border-b border-gray-100 text-gray-600">Material
+                                                    utilization rate:</div>
+                                            </div>
+
+                                            <!-- 参数值 -->
+                                            <div class="space-y-2">
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-length">0.00 mm</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-width">0.00 mm</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-thickness">0.00 mm</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-volume">0.00 cm³</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-weight">0.00 g</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-blank-output-count">0 个</div>
+                                                <div class="py-2 border-b border-gray-100 text-right font-medium text-gray-900"
+                                                    id="result-material-utilization">0.00%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-3 flex items-center justify-center">
+                                    <div class="bg-white rounded-lg shadow-sm p-4 h-full flex flex-col w-full">
+                                        <h4 class="font-medium text-gray-800 mb-3">Raw material 3D view</h4>
+                                        <div class="flex-1 flex items-center justify-center" style="min-height: 315px;">
+                                            <div id="blank-3d-view"
+                                                class="relative w-full h-full flex items-center justify-center">
+                                                <canvas id="blank-3d-canvas" class="threejs-canvas"></canvas>
+                                                <div id="blank-threejs-loading" class="threejs-loading hidden">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <p class="text-sm text-gray-600" id="blank-3d-shape-info">Select shape to
+                                                view raw material 3D view</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button id="back-to-step-2" class="btn-secondary">
+                                <i class="fa fa-arrow-left mr-2"></i> Back to step 2
+                            </button>
+                            <button id="restart-calculation" class="btn-primary">
+                                Restart calculation <i class="fa fa-refresh ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa fa-calculator text-accent text-xl"></i>
+                        <h2 class="text-lg font-bold">Magnetic calculator</h2>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-1">Professional magnetic steel parameter calculation tool</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                        <i class="fa fa-envelope text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-all-300">
+                        <i class="fa fa-weixin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <p>© 2025 Magnetic steel calculator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
