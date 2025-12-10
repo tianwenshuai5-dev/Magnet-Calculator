@@ -710,9 +710,9 @@ function calculateResults() {
         const platingThicknessInMm = platingThickness / 1000;
         const acidWashAmountInMm = acidWashAmount / 1000;
 
-        const effectiveLengthPerPiece = length + lengthWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveWidthPerPiece = width + widthWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveThicknessPerPiece = squareThickness + thicknessWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveLengthPerPiece = length + lengthWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveWidthPerPiece = width + widthWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveThicknessPerPiece = squareThickness + thicknessWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
 
         blankLength = lengthOutputCount * effectiveLengthPerPiece + lengthMachiningAllowance;
         blankWidth = widthOutputCount * effectiveWidthPerPiece + widthMachiningAllowance;
@@ -743,9 +743,9 @@ function calculateResults() {
         const platingThicknessInMm = platingThickness / 1000;
         const acidWashAmountInMm = acidWashAmount / 1000;
 
-        const effectiveDiameterPerPiece = diameter + diameterWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveThicknessPerPiece = thickness + circleThicknessWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveHeightPerPiece = thickness + heightWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveDiameterPerPiece = diameter + diameterWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveThicknessPerPiece = thickness + circleThicknessWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveHeightPerPiece = thickness + heightWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
 
         blankLength = diameterOutputCount * effectiveDiameterPerPiece + diameterMachiningAllowance;
         blankWidth = circleThicknessOutputCount * effectiveDiameterPerPiece + circleThicknessMachiningAllowance;
@@ -777,9 +777,9 @@ function calculateResults() {
         const platingThicknessInMm = platingThickness / 1000;
         const acidWashAmountInMm = acidWashAmount / 1000;
 
-        const effectiveOuterDiameterPerPiece = outerDiameter + outerDiameterWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveInnerDiameterPerPiece = innerDiameter + innerDiameterWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
-        const effectiveThicknessPerPiece = ringThickness + ringThicknessWireDiameter - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveOuterDiameterPerPiece = outerDiameter + outerDiameterWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveInnerDiameterPerPiece = innerDiameter + innerDiameterWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
+        const effectiveThicknessPerPiece = ringThickness + ringThicknessWireDiameter + 0.1 - 2 * platingThicknessInMm + acidWashAmountInMm;
 
         blankLength = outerDiameterOutputCount * effectiveOuterDiameterPerPiece + outerDiameterMachiningAllowance;
         blankWidth = innerDiameterOutputCount * effectiveOuterDiameterPerPiece + innerDiameterMachiningAllowance;
